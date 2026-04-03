@@ -1,0 +1,1 @@
+pyinstaller --onefile --name canvas-tui-windows src/main.py
