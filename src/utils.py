@@ -1,6 +1,18 @@
 import os
 import platform
 from pathlib import Path
+import requests
+import saves
+
+cache: dict[str, str] = {}
+
+current_instance: dict[str, str] | None = None
+def get_current_instance():
+    return current_instance
+def set_current_instance(value: dict[str, str] | None):
+    global current_instance
+    current_instance = value
+    return current_instance
 
 def get_config_dir():
     home = Path.home()
@@ -14,3 +26,8 @@ def get_config_dir():
     # Create the directory if it doesn't exist
     config_dir.mkdir(parents=True, exist_ok=True)
     return config_dir
+
+def get_endpoint(endpoint, **kwargs):
+    if current_instance is None:
+        raise RuntimeError("get_endpoint was called before an instance was assigned")
+    return requests.get(current_instance['url'] + endpoint, headers={"Authorization": "Bearer " + current_instance['token']}, timeout=10, allow_redirects=True, **kwargs)
