@@ -21,4 +21,8 @@ def init(stdscr: curses.window):
     instance_select(stdscr, servers) # TODO: add
 
 if __name__ == "__main__":
-    curses.wrapper(init)
+    try:
+        curses.wrapper(init)
+    except KeyboardInterrupt:
+        print("Goodbye!")
+        pass
