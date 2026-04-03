@@ -7,6 +7,14 @@ import (
 	"path/filepath"
 )
 
+// data = [
+// 	{
+// 		"server": "https://canvas.instructure.com",
+// 		"token": "token",
+// 		"name": "My Canvas"
+// 	}
+// ]
+
 func get_data_path(file string) (string, bool, error) {
 	// Get the base directory (.config)
 	baseConfDir, err := os.UserConfigDir()
