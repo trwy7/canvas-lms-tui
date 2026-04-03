@@ -15,7 +15,7 @@ def show_instance(server: dict[str, str]):
         raise errors.HTTPError("Failed to get user info: " + str(userinfo.status_code))
     # Show dash sections
     tdash = inquirer.select(
-        message="Select an option",
+        message=f"Welcome, {userinfo.json()['first_name']}! Select an option",
         choices=[
             Choice("dashboard", "Dashboard"),
             Choice("courses", "Courses")
