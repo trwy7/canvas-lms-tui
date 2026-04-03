@@ -30,9 +30,9 @@ func get_data_path(file string) (string, bool, error) {
 	return confPath, false, err
 }
 
-func load_data() ([]map[string]string, error) {
+func load_data(file string) ([]map[string]string, error) {
 	// Get the data path
-	confPath, exists, err := get_data_path("servers.json")
+	confPath, exists, err := get_data_path(file)
 	if err != nil {
 		return nil, err
 	}
@@ -52,4 +52,16 @@ func load_data() ([]map[string]string, error) {
 	}
 	// Return the data
 	return smap, nil
+}
+
+func save_data(file string, data []map[string]string) error {
+	// Get the data path
+	confPath, _, err := get_data_path(file)
+	if err != nil {
+		return err
+	}
+	// Save
+	wdata, _ := json.MarshalIndent(data, "", "  ")
+	err = os.WriteFile(confPath, wdata, 0600)
+	return err
 }
