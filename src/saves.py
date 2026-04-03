@@ -1,6 +1,6 @@
 import os
 import json
-from src.utils import get_config_dir
+from utils import get_config_dir
 
 CONFIG_DIR = get_config_dir()
 

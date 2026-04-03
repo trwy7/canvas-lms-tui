@@ -8,6 +8,4 @@ dependencies = [
     "pip-system-certs>=5.3",
     "pyinstaller>=6.19.0",
     "requests>=2.33.1",
-    "textual>=8.2.2",
-    "textual-dev>=1.8.0",
 ]
