@@ -1,7 +1,5 @@
 import pip_system_certs.wrapt_requests # PYInstaller
 pip_system_certs.wrapt_requests.inject_truststore() # PYInstaller
-from textual.app import App, ComposeResult
-from textual.widgets import Footer, Header
 import saves
 
 def init():
