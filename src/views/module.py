@@ -1,9 +1,8 @@
-
 from InquirerPy import inquirer
 from InquirerPy.base import Choice
 import utils
 import errors
-import views.course
+import views.page
 
 def main(server: dict, course: dict, module: dict):
     while True:
@@ -12,7 +11,7 @@ def main(server: dict, course: dict, module: dict):
         # Get module contents
         modreq = utils.get_endpoint(module['items_url'])
         if modreq['status_code'] != 200:
-            raise errors.HTTPError("Failed to get course modules: Error " + str(modreq['status_code']))
+            raise errors.HTTPError("Failed to get module: Error " + str(modreq['status_code']))
         choices = [
             Choice(
                 item,
@@ -34,5 +33,7 @@ def main(server: dict, course: dict, module: dict):
                 break
             case "SubHeader":
                 pass
+            case "Page":
+                views.page.main(server, course, item)
             case _:
                 raise NotImplementedError(f"Type \"{item['type']}\" is not known")

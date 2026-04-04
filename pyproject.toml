@@ -5,8 +5,10 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "html2text>=2025.4.15",
     "inquirerpy>=0.3.4",
     "pip-system-certs>=5.3",
     "pyinstaller>=6.19.0",
     "requests>=2.33.1",
+    "rich>=14.3.3",
 ]
