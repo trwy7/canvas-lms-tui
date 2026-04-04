@@ -3,7 +3,7 @@ from InquirerPy import inquirer
 from InquirerPy.base import Choice
 import utils
 import errors
-import views.course
+import views.module
 
 def main(server: dict, course: dict):
     while True:
