@@ -37,10 +37,11 @@ def set_current_instance(value: dict[str, str] | None):
 
 def clear(*titles):
     os.system('cls' if os.name == 'nt' else 'clear')
+    width = os.get_terminal_size().columns
     if titles:
-        title = "/" + "/".join(titles)
+        title = "\x1b[0;36;7m/" + "/".join(titles) + "\x1b[0m"
     else:
-        title = "---CanvasTUI---"
+        title = "\x1b[0;7m" + "CanvasTUI".center(width) + "\x1b[0m"
     print(title + '\n')
 
 def printHTML(html):
