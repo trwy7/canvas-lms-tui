@@ -5,22 +5,27 @@ import utils
 import views.course
 
 def main(server: dict):
-    # Clear the screen
-    utils.clear(server['name'], "Dashboard")
-    # Get dashboard cards # TODO: Get list of assignments due today
-    courses = utils.get_endpoint("/api/v1/dashboard/dashboard_cards")['json']
-    # Show courses
-    course = inquirer.select(
-        message="Select an option",
-        choices=[
+    while True:
+        # Clear the screen
+        utils.clear(server['name'], "Dashboard")
+        # Get dashboard cards # TODO: Get list of assignments due today
+        courses = utils.get_endpoint("/api/v1/dashboard/dashboard_cards")['json']
+        choices = [
             Choice(
                 course,
                 course['shortName']
             )
             for course in courses
-        ],
-        qmark="",
-        amark=">",
-        show_cursor=False
-    ).execute()
-    views.course.main(server, course)
+        ]
+        choices.append(Choice("back", "Back"))
+        # Show courses
+        course = inquirer.select(
+            message="Select an option",
+            choices=choices,
+            qmark="",
+            amark=">",
+            show_cursor=False
+        ).execute()
+        if course == "back":
+            break
+        views.course.main(server, course)
