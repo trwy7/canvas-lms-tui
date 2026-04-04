@@ -2,6 +2,7 @@ from InquirerPy import inquirer
 from InquirerPy.base import Choice
 from datetime import datetime
 from babel.dates import format_datetime
+import requests
 import utils
 
 def main(server: dict, course: dict, assignment: dict):
@@ -92,25 +93,43 @@ def view_submission(server: dict, course: dict, assignment: dict):
             case "back":
                 break
             case "comments":
-                view_subcomments(server, course, assignment, submission['submission_comments'])
+                view_subcomments(server, course, assignment, submission)
             case "submit":
                 raise NotImplementedError()
 
-def view_subcomments(server: dict, course: dict, assignment: dict, comments: dict):
-    cattempt = 0
-    for comment in comments:
-        if comment['attempt'] != cattempt:
-            print(f"- Attempt {comment['attempt']} -")
-        print(f"\n{comment['author_name']}:\n{comment['comment']}")
-    item = inquirer.select(
-        message="Select an option",
-        choices=[
-            Choice("comment", "Add comment"),
-            Choice("back", "Back")
-        ],
-        qmark="",
-        amark=">",
-        show_cursor=False
+def view_subcomments(server: dict, course: dict, assignment: dict, submission: dict):
+    while True:
+        comments = submission['submission_comments']
+        # Clear the screen
+        utils.clear(server['name'], course['shortName'], "Assignments", assignment['name'], "Submission", "Comments")
+        cattempt = None
+        for comment in comments:
+            if comment['attempt'] != cattempt:
+                print(f"- Attempt {comment['attempt']} -\n")
+                cattempt = comment['attempt']
+            print(f"{comment['author_name']}:\n{comment['comment']}\n")
+        item = inquirer.select(
+            message="Select an option",
+            choices=[
+                Choice("comment", "Add comment"),
+                Choice("back", "Back")
+            ],
+            qmark="",
+            amark=">",
+            show_cursor=False
+        ).execute()
+        match item:
+            case "back":
+                break
+            case "comment":
+                add_subcomment(server, course, assignment, submission)
+        
+
+def add_subcomment(server: dict, course: dict, assignment: dict, submission: dict):
+    cmt = inquirer.text(
+        message="Enter comment text:",
+        multiline=True,
     ).execute()
-    if item == "comment":
-        add_subcomments(server, course, assignment)
+    t = requests.put(f"{server['url']}/api/v1/courses/{course['id']}/assignments/{assignment['id']}/submissions/self", params={"comment[text_comment]": cmt, "comment[attempt]": submission['attempt']}, headers={"Authorization": f"Bearer {server['token']}"}, timeout=10)
+    submission['submission_comments'] = t.json()['submission_comments']
+    utils.clear_request_cache()
