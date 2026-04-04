@@ -57,7 +57,7 @@ def request_token(url):
     return token, token_test_resp
 
 def get_endpoint(endpoint, check_token=True, use_cache=True) -> dict[Literal["status_code", "json"], Any]:
-    cache_key = current_instance['url'] + endpoint
+    cache_key = current_instance['name'] + "/" + current_instance['url'] + endpoint
     if use_cache and cache_key in req_cache and req_cache[cache_key]['timestamp'] > (datetime.now() - timedelta(minutes=5)).timestamp():
         return req_cache[cache_key]
     if current_instance is None:
