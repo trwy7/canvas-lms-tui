@@ -27,7 +27,7 @@ def save_data(file: str, data):
     """
     fpath = str(CONFIG_DIR / file)
     with open(fpath, "w", encoding="UTF-8") as f:
-        json.dump(data, f, indent=2)
+        json.dump(data, f)
     os.chmod(fpath, 0o600)
 
 def load_data(file: str, default=None):
