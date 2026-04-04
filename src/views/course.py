@@ -2,6 +2,7 @@
 from InquirerPy import inquirer
 from InquirerPy.base import Choice
 import utils
+import views.modules
 
 def main(server: dict, course: dict):
     while True:
@@ -23,7 +24,7 @@ def main(server: dict, course: dict):
         ).execute()
         match tdash:
             case "modules":
-                raise NotImplementedError()
+                views.modules.main(server, course)
             case "grades":
                 raise NotImplementedError()
             case "assignments":

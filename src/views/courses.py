@@ -20,7 +20,7 @@ def main(server: dict):
         choices.append(Choice("back", "Back"))
         # Show courses
         course = inquirer.select(
-            message="Select an option",
+            message="Select a course",
             choices=choices,
             qmark="",
             amark=">",
