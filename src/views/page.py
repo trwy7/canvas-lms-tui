@@ -1,10 +1,5 @@
-import html2text
-from rich.console import Console
-from rich.markdown import Markdown
 import utils
 import errors
-
-console = Console()
 
 def main(server: dict, course: dict, page: dict):
     # Clear the screen
@@ -13,5 +8,5 @@ def main(server: dict, course: dict, page: dict):
     pagreq = utils.get_endpoint(page['url'])
     if pagreq['status_code'] != 200:
         raise errors.HTTPError("Failed to get page: Error " + str(pagreq['status_code']))
-    console.print(html2text.html2text(pagreq['json']['body'])) # really jank but works
+    utils.printHTML(pagreq['json']['body'])
     input("Press enter to exit...")

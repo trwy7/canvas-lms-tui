@@ -1,6 +1,9 @@
 import os
 from datetime import datetime, timedelta
 from typing import Literal, Any
+import html2text
+from rich.console import Console
+from rich.markdown import Markdown
 from InquirerPy import inquirer
 import requests
 import saves
@@ -8,6 +11,9 @@ import saves
 req_cache: dict[str, str] = saves.load_data("cache.json", {"timestamp": datetime.now().timestamp()})
 if req_cache['timestamp'] > (datetime.now() + timedelta(hours=2)).timestamp():
     req_cache = {"timestamp": datetime.now().timestamp()}
+
+htt = html2text.HTML2Text(bodywidth=0)
+console = Console()
 
 class colors:
     BLUE = '\033[94m'
@@ -36,6 +42,9 @@ def clear(*titles):
     else:
         title = "---CanvasTUI---"
     print(title + '\n')
+
+def printHTML(html):
+    console.print(Markdown(htt.handle(html))) # really jank but works
 
 def request_token(url):
     token = inquirer.text(message="Input a canvas token. Go to " + url + "/profile/settings and generate a token. Warning: This is stored in plain text, anyone who can access your device can also access your canvas account:").execute()
