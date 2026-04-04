@@ -82,7 +82,7 @@ def view_submission(server: dict, course: dict, assignment: dict):
         choices.append(Choice("back", "Back"))
         # Ask for input
         item = inquirer.select(
-            message="Select an item",
+            message="Select an option",
             choices=choices,
             qmark="",
             amark=">",
@@ -92,9 +92,25 @@ def view_submission(server: dict, course: dict, assignment: dict):
             case "back":
                 break
             case "comments":
-                view_subcomments(server, course, assignment, submission)
+                view_subcomments(server, course, assignment, submission['submission_comments'])
             case "submit":
                 raise NotImplementedError()
 
-def view_subcomments(server: dict, course: dict, assignment: dict, submission: dict):
-    input(submission['submission_comments'])
+def view_subcomments(server: dict, course: dict, assignment: dict, comments: dict):
+    cattempt = 0
+    for comment in comments:
+        if comment['attempt'] != cattempt:
+            print(f"- Attempt {comment['attempt']} -")
+        print(f"\n{comment['author_name']}:\n{comment['comment']}")
+    item = inquirer.select(
+        message="Select an option",
+        choices=[
+            Choice("comment", "Add comment"),
+            Choice("back", "Back")
+        ],
+        qmark="",
+        amark=">",
+        show_cursor=False
+    ).execute()
+    if item == "comment":
+        add_subcomments(server, course, assignment)
