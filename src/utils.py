@@ -53,7 +53,11 @@ def get_endpoint(endpoint, check_token=True, use_cache=True) -> dict[Literal["st
         return req_cache[cache_key]
     if current_instance is None:
         raise RuntimeError("get_endpoint was called before an instance was assigned")
-    r = requests.get(current_instance['url'] + endpoint, headers={"Authorization": "Bearer " + current_instance['token']}, timeout=10, allow_redirects=True)
+    if endpoint.startswith("http"):
+        rurl = endpoint # scary, do not pass arbitrary values into this function
+    else:
+        rurl = current_instance['url'] + endpoint
+    r = requests.get(rurl, headers={"Authorization": "Bearer " + current_instance['token']}, timeout=10, allow_redirects=True)
     if check_token and r.status_code == 401:
         print(f"{colors.RED}{colors.BOLD}The canvas token provided has expired. Please get another one.{colors.END}")
         current_instance['token'] = request_token(current_instance['url'])[0]
