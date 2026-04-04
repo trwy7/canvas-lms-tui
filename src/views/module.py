@@ -3,6 +3,7 @@ from InquirerPy.base import Choice
 import utils
 import errors
 import views.page
+import views.assignment
 
 def main(server: dict, course: dict, module: dict):
     while True:
@@ -35,5 +36,7 @@ def main(server: dict, course: dict, module: dict):
                 pass
             case "Page":
                 views.page.main(server, course, item)
+            case "Assignment":
+                views.assignment.main(server, course, item)
             case _:
                 raise NotImplementedError(f"Type \"{item['type']}\" is not known")
