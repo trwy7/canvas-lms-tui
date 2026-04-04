@@ -32,5 +32,7 @@ def main(server: dict, course: dict, module: dict):
         match item['type']:
             case "back":
                 break
+            case "SubHeader":
+                pass
             case _:
                 raise NotImplementedError(f"Type \"{item['type']}\" is not known")
