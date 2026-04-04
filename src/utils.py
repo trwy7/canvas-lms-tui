@@ -1,5 +1,7 @@
 import os
 import platform
+from datetime import datetime, timedelta
+from typing import Literal, Any
 from pathlib import Path
 from InquirerPy import inquirer
 import requests
@@ -50,15 +52,17 @@ def get_config_dir():
 def request_token(url):
     token = inquirer.text(message="Input a canvas token. Go to " + url + "/profile/settings and generate a token. Warning: This is stored in plain text, anyone who can access your device can also access your canvas account:").execute()
     current_instance['token'] = token
-    token_test_resp = get_endpoint("/api/v1/users/self", check_token=False)
-    if token_test_resp.status_code != 200:
+    token_test_resp = get_endpoint("/api/v1/users/self", check_token=False, use_cache=False)
+    if token_test_resp['status_code'] != 200:
         token = inquirer.text(message="That token isn't working, try again:").execute()
         current_instance['token'] = token
-        token_test_resp = get_endpoint("/api/v1/users/self", check_token=False)
+        token_test_resp = get_endpoint("/api/v1/users/self", check_token=False, use_cache=False)
     return token, token_test_resp
 
-def get_endpoint(endpoint, check_token=True):
-    # TODO: add a cache to this function
+def get_endpoint(endpoint, check_token=True, use_cache=True) -> dict[Literal["status_code", "json"], Any]:
+    cache_key = current_instance['id'] + current_instance['url'] + endpoint
+    if use_cache and cache_key in req_cache:
+        return req_cache[cache_key]
     if current_instance is None:
         raise RuntimeError("get_endpoint was called before an instance was assigned")
     r = requests.get(current_instance['url'] + endpoint, headers={"Authorization": "Bearer " + current_instance['token']}, timeout=10, allow_redirects=True)
@@ -66,4 +70,14 @@ def get_endpoint(endpoint, check_token=True):
         print(f"{colors.RED}{colors.BOLD}The canvas token provided has expired. Please get another one.{colors.END}")
         current_instance['token'] = request_token(current_instance['url'])[0]
         r = requests.get(current_instance['url'] + endpoint, headers={"Authorization": "Bearer " + current_instance['token']}, timeout=10, allow_redirects=True)
-    return r
+    jresp = {
+        'status_code': r.status_code,
+        'json': r.json()
+    }
+    if use_cache:
+        req_cache[cache_key] = jresp
+    return jresp
+
+def clear_request_cache():
+    global req_cache
+    req_cache = {}
