@@ -1,12 +1,13 @@
 import os
-import platform
 from datetime import datetime, timedelta
 from typing import Literal, Any
-from pathlib import Path
 from InquirerPy import inquirer
 import requests
+import saves
 
-req_cache: dict[str, str] = {}
+req_cache: dict[str, str] = saves.load_data("cache.json", {"timestamp": datetime.now().timestamp()})
+if req_cache['timestamp'] > (datetime.now() + timedelta(hours=2)).timestamp():
+    req_cache = {"timestamp": datetime.now().timestamp()}
 
 class colors:
     BLUE = '\033[94m'
@@ -36,19 +37,6 @@ def clear(*titles):
         title = "---CanvasTUI---"
     print(title + '\n')
 
-def get_config_dir():
-    home = Path.home()
-    if platform.system() == "Windows":
-        config_dir = Path(os.getenv("APPDATA")) / "trwy_canvas-lms-tui"
-    elif platform.system() == "Darwin":
-        config_dir = home / "Library" / "Application Support" / "trwy_canvas-lms-tui"
-    else:
-        config_dir = Path(os.getenv("XDG_CONFIG_HOME", home / ".config")) / "trwy_canvas-lms-tui"
-        
-    # Create the directory if it doesn't exist
-    config_dir.mkdir(parents=True, exist_ok=True)
-    return config_dir
-
 def request_token(url):
     token = inquirer.text(message="Input a canvas token. Go to " + url + "/profile/settings and generate a token. Warning: This is stored in plain text, anyone who can access your device can also access your canvas account:").execute()
     current_instance['token'] = token
@@ -61,7 +49,7 @@ def request_token(url):
 
 def get_endpoint(endpoint, check_token=True, use_cache=True) -> dict[Literal["status_code", "json"], Any]:
     cache_key = current_instance['id'] + current_instance['url'] + endpoint
-    if use_cache and cache_key in req_cache:
+    if use_cache and cache_key in req_cache and req_cache[cache_key]['timestamp'] > (datetime.now() - timedelta(minutes=5)).timestamp():
         return req_cache[cache_key]
     if current_instance is None:
         raise RuntimeError("get_endpoint was called before an instance was assigned")
@@ -72,7 +60,8 @@ def get_endpoint(endpoint, check_token=True, use_cache=True) -> dict[Literal["st
         r = requests.get(current_instance['url'] + endpoint, headers={"Authorization": "Bearer " + current_instance['token']}, timeout=10, allow_redirects=True)
     jresp = {
         'status_code': r.status_code,
-        'json': r.json()
+        'json': r.json(),
+        'timestamp': datetime.now().timestamp()
     }
     if use_cache:
         req_cache[cache_key] = jresp
@@ -80,4 +69,7 @@ def get_endpoint(endpoint, check_token=True, use_cache=True) -> dict[Literal["st
 
 def clear_request_cache():
     global req_cache
-    req_cache = {}
+    req_cache = {"timestamp": datetime.now().timestamp()}
+
+def on_exit():
+    saves.save_data("cache.json", req_cache)

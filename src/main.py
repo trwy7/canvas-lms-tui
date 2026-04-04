@@ -27,10 +27,12 @@ if __name__ == "__main__":
     try:
         sys.stdout.write("\033[?1049h\033[H")
         sys.stdout.flush()
+        print("Launching!")
         init()
     except KeyboardInterrupt:
-        print("Goodbye!")
+        pass
     finally:
         sys.stdout.write("\033[?1049l")
         sys.stdout.flush()
         saves.save_data("servers.json", servers)
+        utils.on_exit() # Save the cache
