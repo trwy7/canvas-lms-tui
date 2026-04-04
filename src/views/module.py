@@ -28,9 +28,9 @@ def main(server: dict, course: dict, module: dict):
             amark=">",
             show_cursor=False
         ).execute()
+        if item == "back":
+            break
         match item['type']:
-            case "back":
-                break
             case "SubHeader":
                 pass
             case "Page":
