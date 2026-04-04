@@ -4,6 +4,7 @@ import sys
 import saves
 from views.setup import add_instance
 from views.dashboard import show_instance
+from views.servers import instance_select
 import utils
 
 # Get the configured servers
@@ -19,9 +20,8 @@ def init():
     if len(servers) == 1:
         # Use it as a default
         show_instance(servers[0])
-    else:
-        # Ask the user for a selection
-        instance_select(servers) # TODO: add
+    # Ask the user for a selection
+    instance_select(servers) # TODO: add
 
 if __name__ == "__main__":
     try:
