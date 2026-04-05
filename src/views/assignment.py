@@ -8,36 +8,38 @@ import utils
 def main(server: dict, course: dict, assignment: dict):
     while True:
         # Clear the screen
-        utils.clear(server['name'], course['shortName'], "Assignments", assignment['title'])
-        # Get assignment contents
-        assignmentreq = utils.get_endpoint(assignment['url'])
-        jassignment = assignmentreq['json']
+        utils.clear(server['name'], course['shortName'], "Assignments", assignment.get('title') or assignment.get('name'))
+        # Check if the assignment is the full details, if not, fetch them.
+        if 'description' not in assignment:
+            # Get assignment contents
+            assignmentreq = utils.get_endpoint(assignment['url'])
+            assignment = assignmentreq['json']
         # Print details and set choices
         choices = []
-        if jassignment['points_possible']:
-            print(str(jassignment['points_possible']) + " points")
-        if jassignment['omit_from_final_grade']:
+        if assignment['points_possible']:
+            print(str(assignment['points_possible']) + " points")
+        if assignment['omit_from_final_grade']:
             print("This assignment does not count toward your final grade")
-        if jassignment['has_submitted_submissions']:
+        if assignment['has_submitted_submissions']:
             print("You have submitted this assignment")
         else:
             print("This assignment is missing")
-        if jassignment['unlock_at']:
-            print(f"Unlocked at {format_datetime(datetime.fromisoformat(jassignment['unlock_at']))}")
-        if jassignment['due_at']:
-            print(f"Due at {format_datetime(datetime.fromisoformat(jassignment['due_at']))}")
+        if assignment['unlock_at']:
+            print(f"Unlocked at {format_datetime(datetime.fromisoformat(assignment['unlock_at']))}")
+        if assignment['due_at']:
+            print(f"Due at {format_datetime(datetime.fromisoformat(assignment['due_at']))}")
         else:
             print("This assignment does not have a due date")
-        if jassignment['lock_at']:
-            print(f"Locks at {format_datetime(datetime.fromisoformat(jassignment['lock_at']))}")
-        if jassignment.get('availability_status') and jassignment['availability_status']['status'] == "closed":
-            print("Locked: " + jassignment.get("lock_explanation", "This assignment was locked"))
+        if assignment['lock_at']:
+            print(f"Locks at {format_datetime(datetime.fromisoformat(assignment['lock_at']))}")
+        if assignment.get('availability_status') and assignment['availability_status']['status'] == "closed":
+            print("Locked: " + assignment.get("lock_explanation", "This assignment was locked"))
         choices.append(Choice("submission", "View submission"))
         choices.append(Choice("back", "Back"))
         # Show description
-        if jassignment['description']: # Sometimes the description is blank
+        if assignment['description']: # Sometimes the description is blank
             print("\nDescription:")
-            utils.printHTML(jassignment['description'])
+            utils.printHTML(assignment['description'])
         print("\n")
         # Ask for input
         item = inquirer.select(
@@ -51,7 +53,7 @@ def main(server: dict, course: dict, assignment: dict):
             case "back":
                 break
             case "submission":
-                view_submission(server, course, jassignment)
+                view_submission(server, course, assignment)
 
 def view_submission(server: dict, course: dict, assignment: dict):
     while True:

@@ -3,6 +3,7 @@ from InquirerPy import inquirer
 from InquirerPy.base import Choice
 import utils
 import views.modules
+import views.assignments
 
 def main(server: dict, course: dict):
     while True:
@@ -28,7 +29,7 @@ def main(server: dict, course: dict):
             case "grades":
                 raise NotImplementedError()
             case "assignments":
-                raise NotImplementedError()
+                views.assignments.main(server, course)
             case "announcements":
                 raise NotImplementedError()
             case "back":
