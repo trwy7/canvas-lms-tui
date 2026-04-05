@@ -3,6 +3,7 @@ from InquirerPy.base import Choice
 from datetime import datetime
 from babel.dates import format_datetime
 import requests
+import views.submit
 import utils
 
 def main(server: dict, course: dict, assignment: dict):
@@ -97,7 +98,7 @@ def view_submission(server: dict, course: dict, assignment: dict):
             case "comments":
                 view_subcomments(server, course, assignment, submission)
             case "submit":
-                raise NotImplementedError()
+                views.submit.main(server, course, assignment)
 
 def view_subcomments(server: dict, course: dict, assignment: dict, submission: dict):
     while True:
