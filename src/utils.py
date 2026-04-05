@@ -46,11 +46,11 @@ def printHTML(html):
     console.print(Markdown(htt.handle(html))) # really jank but works
 
 def request_token(url):
-    token = inquirer.text(message="Input a canvas token. Go to " + url + "/profile/settings and generate a token. Warning: This is stored in plain text, anyone who can access your device can also access your canvas account:").execute()
+    token = inquirer.secret(message="Input a canvas token. Go to " + url + "/profile/settings and generate a token. Warning: This is stored in plain text, anyone who can access your device can also access your canvas account:").execute()
     current_instance['token'] = token
     token_test_resp = get_endpoint("/api/v1/users/self", check_token=False, use_cache=False)
     if token_test_resp['status_code'] != 200:
-        token = inquirer.text(message="That token isn't working, try again:").execute()
+        token = inquirer.secret(message="That token isn't working, try again:").execute()
         current_instance['token'] = token
         token_test_resp = get_endpoint("/api/v1/users/self", check_token=False, use_cache=False)
     return token, token_test_resp
