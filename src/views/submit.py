@@ -105,7 +105,6 @@ def text_submit(server: dict, course: dict, assignment: dict):
         amark=">",
         multiline=True
     ).execute()
-    input(resp)
     # Confirm
     conf = inquirer.confirm(
         message="Are you sure you want to submit"
@@ -113,7 +112,18 @@ def text_submit(server: dict, course: dict, assignment: dict):
     if not conf:
         return
     # Submit!
-    # TODO: Add
+    upl = requests.post(
+        f"{server['url']}/api/v1/courses/{course['id']}/assignments/{assignment['id']}/submissions",
+        params={"submission[submission_type]": "online_text_entry", "submission[body]": resp},
+        headers={"Authorization": f"Bearer {server['token']}"},
+        timeout=10
+    )
+    if upl.status_code != 201:
+        print("Submission may have failed:")
+        print(str(upl))
+        print(str(upl.status_code))
+        input(str(upl.text))
+    utils.clear_request_cache()
 
 def url_submit(server: dict, course: dict, assignment: dict):
     # Clear the screen
