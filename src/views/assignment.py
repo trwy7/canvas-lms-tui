@@ -70,10 +70,10 @@ def view_submission(server: dict, course: dict, assignment: dict):
                 print(f"You got {submission['score']} points")
         if submission['submitted_at']:
             print(f"Submitted at {format_datetime(datetime.fromisoformat(submission['submitted_at']))}")
-        if submission['submission_type']:
-            print(f"Submission type: {submission['submission_type']}")
         if not submission['grade_matches_current_submission']:
             print("Your current grade does not match your current submission")
+        if submission['submission_type']:
+            print(f"Submission type: {submission['submission_type']}")
         if submission['excused']:
             print("You were excused from this assignment")
         if submission['late']:
