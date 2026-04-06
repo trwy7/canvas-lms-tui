@@ -21,7 +21,7 @@ def init():
         # Use it as a default
         show_instance(servers[0])
     # Ask the user for a selection
-    instance_select(servers) # TODO: add
+    instance_select(servers)
 
 if __name__ == "__main__":
     try:

@@ -1,3 +1,4 @@
+from time import time
 from InquirerPy import inquirer
 from InquirerPy.base import Choice
 from InquirerPy.validator import PathValidator
@@ -80,20 +81,44 @@ def file_submit(server: dict, course: dict, assignment: dict):
     if not conf:
         return
     # Submit it!
-    utils.clear(server['name'], course['shortName'], "Assignments", assignment['name'], "Submit", "File upload", "Submitting")
     upload_ids = []
-    for file in flist:
+    for i, file in enumerate(flist, start=1):
+        utils.clear(server['name'], course['shortName'], "Assignments", assignment['name'], "Submit", "File upload", "Submitting")
         fname = os.path.basename(file)
+        print(f"Uploading file {str(i)}/{str(len(flist))}:\n{fname}\nGetting upload URL")
         upl = requests.post(
             f"{server['url']}/api/v1/courses/{course['id']}/assignments/{assignment['id']}/submissions/self/files",
             params={"size": os.path.getsize(file), "name": fname},
             headers={"Authorization": f"Bearer {server['token']}"},
             timeout=10
         )
-        upl_url = upl.json()
-        print(upl_url)
-        # TODO: Finish
-        input()
+        print("Status: " + str(upl.status_code))
+        upl_data = upl.json()
+        print("Uploading...")
+        with open(file, "rb") as rfile:
+            freq = requests.post(
+                upl_data['upload_url'],
+                params=upl_data['upload_params'],
+                files={"file": rfile},
+                allow_redirects=False
+            )
+        if freq.status_code != 201:
+            print('Finalizing...')
+            freq = requests.get(freq.headers['Location'], headers={'Authorization': f'Bearer {server['token']}'}, timeout=10)
+        upload_ids.append(str(freq.json()['id']))
+    input(str(upload_ids))
+    utils.clear(server['name'], course['shortName'], "Assignments", assignment['name'], "Submit", "File upload", "Submitting")
+    print("Sending submission...")
+    finalsubmit = requests.post(
+        f"{server['url']}/api/v1/courses/{course['id']}/assignments/{assignment['id']}/submissions?submission[submission_type]=online_upload&submission[file_ids][]=" + "&submission[file_ids][]=".join(upload_ids),
+        headers={"Authorization": f"Bearer {server['token']}"},
+        timeout=10
+    )
+    #if finalsubmit.status_code != 201:
+    print("Submission may have failed:")
+    print(str(finalsubmit.status_code))
+    input(str(finalsubmit.text))
+    utils.clear_request_cache()
 
 def text_submit(server: dict, course: dict, assignment: dict):
     # Clear the screen
@@ -120,7 +145,6 @@ def text_submit(server: dict, course: dict, assignment: dict):
     )
     if upl.status_code != 201:
         print("Submission may have failed:")
-        print(str(upl))
         print(str(upl.status_code))
         input(str(upl.text))
     utils.clear_request_cache()
@@ -150,7 +174,6 @@ def url_submit(server: dict, course: dict, assignment: dict):
     )
     if upl.status_code != 201:
         print("Submission may have failed:")
-        print(str(upl))
         print(str(upl.status_code))
         input(str(upl.text))
     utils.clear_request_cache()
