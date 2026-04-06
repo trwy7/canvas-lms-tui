@@ -106,9 +106,9 @@ def file_submit(server: dict, course: dict, assignment: dict):
             print('Finalizing...')
             freq = requests.get(freq.headers['Location'], headers={'Authorization': f'Bearer {server['token']}'}, timeout=10)
         upload_ids.append(str(freq.json()['id']))
-    input(str(upload_ids))
     utils.clear(server['name'], course['shortName'], "Assignments", assignment['name'], "Submit", "File upload", "Submitting")
     print("Sending submission...")
+    print(str(upload_ids))
     finalsubmit = requests.post(
         f"{server['url']}/api/v1/courses/{course['id']}/assignments/{assignment['id']}/submissions?submission[submission_type]=online_upload&submission[file_ids][]=" + "&submission[file_ids][]=".join(upload_ids),
         headers={"Authorization": f"Bearer {server['token']}"},
