@@ -19,12 +19,12 @@ def main(server: dict):
         ]
         choices.append(Choice("back", "Back"))
         # Show courses
-        course = inquirer.select(
+        course = inquirer.fuzzy(
             message="Select a course",
             choices=choices,
             qmark="",
             amark=">",
-            show_cursor=False
+            border=True
         ).execute()
         if course == "back":
             break
