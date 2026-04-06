@@ -1,9 +1,9 @@
-
 from InquirerPy import inquirer
 from InquirerPy.base import Choice
 import utils
 import views.modules
 import views.assignments
+import views.announcements
 
 def main(server: dict, course: dict):
     while True:
@@ -31,6 +31,6 @@ def main(server: dict, course: dict):
             case "assignments":
                 views.assignments.main(server, course)
             case "announcements":
-                raise NotImplementedError()
+                views.announcements.main(server, course)
             case "back":
                 break

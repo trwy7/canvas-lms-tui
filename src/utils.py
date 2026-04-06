@@ -72,7 +72,7 @@ def get_endpoint(endpoint, check_token=True, use_cache=True) -> dict[Literal["st
         r = requests.get(current_instance['url'] + endpoint, headers={"Authorization": "Bearer " + current_instance['token']}, timeout=10, allow_redirects=True)
     jresp = {
         'status_code': r.status_code,
-        'json': r.json(),
+        'json': r.json() if r.text else None,
         'timestamp': datetime.now().timestamp()
     }
     if use_cache:
