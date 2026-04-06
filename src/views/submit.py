@@ -130,7 +130,7 @@ def url_submit(server: dict, course: dict, assignment: dict):
     utils.clear(server['name'], course['shortName'], "Assignments", assignment['name'], "Submit", "URL")
     # Ask for input
     resp = inquirer.text(
-        message="Enter submission URL",
+        message="Enter submission URL:",
         qmark="",
         amark=">"
     ).execute()
@@ -142,4 +142,15 @@ def url_submit(server: dict, course: dict, assignment: dict):
     if not conf:
         return
     # Submit!
-    # TODO: Add
+    upl = requests.post(
+        f"{server['url']}/api/v1/courses/{course['id']}/assignments/{assignment['id']}/submissions",
+        params={"submission[submission_type]": "online_url", "submission[url]": resp},
+        headers={"Authorization": f"Bearer {server['token']}"},
+        timeout=10
+    )
+    if upl.status_code != 201:
+        print("Submission may have failed:")
+        print(str(upl))
+        print(str(upl.status_code))
+        input(str(upl.text))
+    utils.clear_request_cache()
