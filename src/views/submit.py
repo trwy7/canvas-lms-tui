@@ -114,10 +114,10 @@ def file_submit(server: dict, course: dict, assignment: dict):
         headers={"Authorization": f"Bearer {server['token']}"},
         timeout=10
     )
-    #if finalsubmit.status_code != 201:
-    print("Submission may have failed:")
-    print(str(finalsubmit.status_code))
-    input(str(finalsubmit.text))
+    if finalsubmit.status_code != 201:
+        print("Submission may have failed:")
+        print(str(finalsubmit.status_code))
+        input(str(finalsubmit.text))
     utils.clear_request_cache()
 
 def text_submit(server: dict, course: dict, assignment: dict):
