@@ -4,6 +4,7 @@ import utils
 import views.modules
 import views.assignments
 import views.announcements
+import views.grades
 
 def main(server: dict, course: dict):
     while True:
@@ -27,7 +28,7 @@ def main(server: dict, course: dict):
             case "modules":
                 views.modules.main(server, course)
             case "grades":
-                raise NotImplementedError()
+                views.grades.main(server, course)
             case "assignments":
                 views.assignments.main(server, course)
             case "announcements":
