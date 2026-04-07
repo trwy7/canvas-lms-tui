@@ -37,11 +37,9 @@ def view_message(server: dict, message: dict):
         utils.clear(server['name'], "Inbox", message['subject'])
         # Get message 
         messages = utils.get_endpoint("/api/v1/conversations/" + str(message['id']) + "?auto_mark_as_read=true")['json']
-        # Reverse into newest last
-        messages['messages'].reverse()
         # Print messages
         participant_nmap = {u['id']: u['name'] for u in messages['participants']} # Author names are not included in the message for some reason
-        for rmessage in messages['messages']:
+        for rmessage in messages['messages'][::-1]:
             print(participant_nmap[rmessage['author_id']] + " at " + format_datetime(datetime.fromisoformat(rmessage['created_at'])) + ":")
             print(rmessage['body'] + "\n")
         # We cannot mark as read for individual messages for some reason, if someone finds a way, make an issue!
