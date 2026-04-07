@@ -38,5 +38,8 @@ def main(server: dict, course: dict, module: dict):
                 views.page.main(server, course, item)
             case "Assignment":
                 views.assignment.main(server, course, item)
+            case "ExternalUrl":
+                print(item['external_url'])
+                input("Press enter to continue...")
             case _:
                 input(f"Type \"{item['type']}\" is not known\nPress enter to continue...")
