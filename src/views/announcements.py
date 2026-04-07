@@ -10,7 +10,7 @@ def main(server: dict, course: dict):
         anreq = utils.get_endpoint(f"/api/v1/announcements?context_codes[]=course_{course['id']}") # why is this so weird
         announcements = anreq['json']
         if announcements is None:
-            print("There are no announcements\n")
+            print("There are no announcements, or you do not have access to view any\n")
             input("Press enter to go back...")
         choices = [
             Choice(announcement, announcement['title'])
