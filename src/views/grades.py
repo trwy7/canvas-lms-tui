@@ -18,6 +18,6 @@ def main(server: dict, course: dict):
             print(f"Current grade (including ungraded): {str(gcourse['enrollments'][0]['computed_final_score'])}")
     else:
         print("Was not able to get current grade")
-    input("\nPress enter to exit")
+    input("\nPress enter to exit...")
         #break
         # TODO: /api/v1/courses/<id>/students/submissions for individual assignments, then uncomment the while true
