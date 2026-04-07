@@ -37,13 +37,13 @@ def view_message(server: dict, message: dict):
         # Get message 
         messages = utils.get_endpoint("/api/v1/conversations/" + str(message['id']))['json']
         participant_nmap = {u['id']: u['name'] for u in messages['participants']}
-        for message in messages['messages']:
-            print(participant_nmap[message['author_id']] + " at " + format_datetime(datetime.fromisoformat(message['created_at'])) + ":")
-            print(message['body'] + "\n")
+        for rmessage in messages['messages']:
+            print(participant_nmap[rmessage['author_id']] + " at " + format_datetime(datetime.fromisoformat(message['created_at'])) + ":")
+            print(rmessage['body'] + "\n")
         # We cannot mark as read for individual messages for some reason, if someone finds a way, make an issue!
         # Show messages
-        message = inquirer.select(
-            message="Select a message",
+        sel = inquirer.select(
+            message="Select an option",
             choices=[
                 Choice("reply", "Reply"),
                 Choice("back", "Back")
@@ -52,8 +52,8 @@ def view_message(server: dict, message: dict):
             amark=">",
             show_cursor=False
         ).execute()
-        match message:
+        match sel:
             case "back":
                 break
-            case "back":
-                pass
+            case "reply":
+                reply_to_msg(server, message)
