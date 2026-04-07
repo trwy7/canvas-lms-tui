@@ -1,7 +1,7 @@
 [project]
 name = "canvas-lms-tui"
 version = "0.1.0"
-description = "Add your description here"
+description = "A TUI for canvas LMS"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
