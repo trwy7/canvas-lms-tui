@@ -9,13 +9,16 @@ jobs:
   build:
     name: Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
     strategy:
       matrix:
         include:
           - os: ubuntu-latest
+            container: archlinux:latest
             script: ./build.sh
             artifact_name: canvas-tui-linux
           - os: windows-latest
+            container: null
             script: .\\build.bat
             artifact_name: canvas-tui-windows.exe
 
