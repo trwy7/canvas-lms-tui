@@ -39,4 +39,4 @@ def main(server: dict, course: dict, module: dict):
             case "Assignment":
                 views.assignment.main(server, course, item)
             case _:
-                raise NotImplementedError(f"Type \"{item['type']}\" is not known")
+                input(f"Type \"{item['type']}\" is not known\nPress enter to continue...")
