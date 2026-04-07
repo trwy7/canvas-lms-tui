@@ -37,6 +37,8 @@ def view_message(server: dict, message: dict):
         utils.clear(server['name'], "Inbox", message['subject'])
         # Get message 
         messages = utils.get_endpoint("/api/v1/conversations/" + str(message['id']) + "?auto_mark_as_read=true")['json']
+        # Reverse into newest last
+        messages['messages'].reverse()
         # Print messages
         participant_nmap = {u['id']: u['name'] for u in messages['participants']} # Author names are not included in the message for some reason
         for rmessage in messages['messages']:
