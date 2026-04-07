@@ -13,8 +13,8 @@ def main(server: dict, course: dict):
     if gcourse['enrollments'][0]['computed_current_score']:
         # Check if a letter grade is available
         if gcourse['enrollments'][0]['computed_current_grade']:
-            print(f"Current grade: {str(gcourse['enrollments'][0]['computed_current_score'])} ({str(gcourse['enrollments'][0]['computed_current_grade'])})")
-            print(f"Current grade (including ungraded): {str(gcourse['enrollments'][0]['computed_final_score'])} ({str(gcourse['enrollments'][0]['computed_final_grade'])})")
+            print(f"Current grade: {str(gcourse['enrollments'][0]['computed_current_score'])}% ({str(gcourse['enrollments'][0]['computed_current_grade'])})")
+            print(f"Current grade (including ungraded): {str(gcourse['enrollments'][0]['computed_final_score'])}% ({str(gcourse['enrollments'][0]['computed_final_grade'])})")
         else:
             print(f"Current grade: {str(gcourse['enrollments'][0]['computed_current_score'])}")
             print(f"Current grade (including ungraded): {str(gcourse['enrollments'][0]['computed_final_score'])}")
