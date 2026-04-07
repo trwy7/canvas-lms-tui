@@ -129,12 +129,19 @@ def view_subcomments(server: dict, course: dict, assignment: dict, submission: d
             case "comment":
                 add_subcomment(server, course, assignment, submission)
         
-
 def add_subcomment(server: dict, course: dict, assignment: dict, submission: dict):
+    # Request comment
     cmt = inquirer.text(
         message="Enter comment text:",
         multiline=True,
     ).execute()
+    # Confirm
+    conf = inquirer.confirm(
+        message="Are you sure you want to add this comment"
+    ).execute()
+    if not conf:
+        return
+    # Add it!
     t = requests.put(f"{server['url']}/api/v1/courses/{course['id']}/assignments/{assignment['id']}/submissions/self", params={"comment[text_comment]": cmt, "comment[attempt]": submission['attempt']}, headers={"Authorization": f"Bearer {server['token']}"}, timeout=10)
     submission['submission_comments'] = t.json()['submission_comments']
     utils.clear_request_cache()
