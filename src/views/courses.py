@@ -8,7 +8,7 @@ def main(server: dict):
     while True:
         # Clear the screen
         utils.clear(server['name'], "Dashboard")
-        # Get dashboard cards # TODO: Get list of assignments due today
+        # Get dashboard cards
         courses = utils.get_endpoint("/api/v1/dashboard/dashboard_cards")['json']
         choices = [
             Choice(
