@@ -40,11 +40,11 @@ def view_message(server: dict, message: dict):
         for message in messages['messages']:
             print(participant_nmap[message['author_id']] + " at " + format_datetime(datetime.fromisoformat(message['created_at'])) + ":")
             print(message['body'] + "\n")
+        # We cannot mark as read for individual messages for some reason, if someone finds a way, make an issue!
         # Show messages
         message = inquirer.select(
             message="Select a message",
             choices=[
-                Choice("read", "Mark as read"),
                 Choice("reply", "Reply"),
                 Choice("back", "Back")
             ],
@@ -55,7 +55,5 @@ def view_message(server: dict, message: dict):
         match message:
             case "back":
                 break
-            case "read":
-                pass
             case "back":
                 pass
