@@ -26,13 +26,13 @@ def main(server: dict, course: dict, assignment: dict):
         else:
             print("This assignment is missing")
         if assignment['unlock_at']:
-            print(f"Unlocked at {format_datetime(datetime.fromisoformat(assignment['unlock_at']))}")
+            print(f"Unlocked at {format_datetime(datetime.fromisoformat(assignment['unlock_at']), locale=utils.loc)}")
         if assignment['due_at']:
-            print(f"Due at {format_datetime(datetime.fromisoformat(assignment['due_at']))}")
+            print(f"Due at {format_datetime(datetime.fromisoformat(assignment['due_at']), locale=utils.loc)}")
         else:
             print("This assignment does not have a due date")
         if assignment['lock_at']:
-            print(f"Locks at {format_datetime(datetime.fromisoformat(assignment['lock_at']))}")
+            print(f"Locks at {format_datetime(datetime.fromisoformat(assignment['lock_at']), locale=utils.loc)}")
         if assignment.get('availability_status') and assignment['availability_status']['status'] == "closed":
             print("Locked: " + assignment.get("lock_explanation", "This assignment was locked"))
         choices.append(Choice("submission", "View submission"))
@@ -69,7 +69,7 @@ def view_submission(server: dict, course: dict, assignment: dict):
             else:
                 print(f"You got {submission['score']} points")
         if submission['submitted_at']:
-            print(f"Submitted at {format_datetime(datetime.fromisoformat(submission['submitted_at']))}")
+            print(f"Submitted at {format_datetime(datetime.fromisoformat(submission['submitted_at']), locale=utils.loc)}")
         if not submission['grade_matches_current_submission']:
             print("Your current grade does not match your current submission")
         if submission['submission_type']:

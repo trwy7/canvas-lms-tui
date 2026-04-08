@@ -1,8 +1,10 @@
 import os
+import locale
 from datetime import datetime, timedelta
 from typing import Literal, Any
 import html2text
 from rich.console import Console
+from babel import Locale
 from rich.markdown import Markdown
 from InquirerPy import inquirer
 import requests
@@ -14,6 +16,14 @@ if req_cache['timestamp'] > (datetime.now() + timedelta(hours=2)).timestamp():
 
 htt = html2text.HTML2Text(bodywidth=0)
 console = Console()
+
+try:
+    loc = Locale.default()
+except:
+    try:
+        loc = Locale.parse(locale.getdefaultlocale()[0])
+    except:
+        loc = Locale.parse('en_US')
 
 class colors:
     BLUE = '\033[94m'

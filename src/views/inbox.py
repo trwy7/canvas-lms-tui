@@ -40,7 +40,7 @@ def view_message(server: dict, message: dict):
         # Print messages
         participant_nmap = {u['id']: u['name'] for u in messages['participants']} # Author names are not included in the message for some reason
         for rmessage in messages['messages'][::-1]:
-            print(participant_nmap[rmessage['author_id']] + " at " + format_datetime(datetime.fromisoformat(rmessage['created_at'])) + ":")
+            print(participant_nmap[rmessage['author_id']] + " at " + format_datetime(datetime.fromisoformat(rmessage['created_at']), locale=utils.loc) + ":")
             print(rmessage['body'] + "\n")
         # We cannot mark as read for individual messages for some reason, if someone finds a way, make an issue!
         # Show messages
