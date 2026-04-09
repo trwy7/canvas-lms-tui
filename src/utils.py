@@ -41,6 +41,7 @@ def get_current_instance():
     return current_instance
 def set_current_instance(value: dict[str, str] | None):
     global current_instance
+    value['token'] = value['token'].strip("\n ") # Weird but sometimes json seems to bug
     current_instance = value
     return current_instance
 
@@ -57,7 +58,7 @@ def printHTML(html):
 
 def request_token(url):
     token = inquirer.secret(message="Input a personal canvas token. Go to " + url + "/profile/settings and generate a token. Warning: This is stored in plain text, anyone who can access your device may be able to access your canvas account:").execute()
-    current_instance['token'] = token
+    current_instance['token'] = token.strip("\n ")
     token_test_resp = get_endpoint("/api/v1/users/self", check_token=False, use_cache=False)
     if token_test_resp['status_code'] != 200:
         token = inquirer.secret(message="That token isn't working, try again:").execute()
