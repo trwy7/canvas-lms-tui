@@ -8,6 +8,8 @@ This only works with student accounts. Attempting to access a course you have te
 
 Either clone the repo, install dependencies with `uv sync`, and run src/main.py, or download the prebuilt binaries from the releases tab and run them. Some distros do not like the binary for some reason and throw a libpython error, so you may need to run from source.
 
+Follow the setup prompts and you are good to go!
+
 ## Features
 
 - Browse modules and assignments
